@@ -4,6 +4,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 
+from cart.models import *
+
 
 def register(request):
     if request.method == "POST":
@@ -50,7 +52,9 @@ def logout_user(request):
 
 def profile(request):
     user = request.user
+    my_orders = Order.objects.filter(owner= request.user)
     context = {
         'user':user,
+        "my_orders":my_orders,
     }
     return render(request,'myprofile.html',context)

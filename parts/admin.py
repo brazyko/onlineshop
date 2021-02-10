@@ -12,10 +12,10 @@ class CustomMPTTModelAdmin(DraggableMPTTAdmin):
     mptt_level_indent = 50
 
 admin.site.register(Category,CustomMPTTModelAdmin)
-
+ 
 class ProductImageInline(admin.StackedInline):
     model = ProductImage
-    max_num = 5
+    max_num = 5 
     extra = 0
 
 

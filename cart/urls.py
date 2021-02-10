@@ -7,4 +7,5 @@ urlpatterns = [
     path('', order_details,name='order_summary'),
     path('add-to-cart/<item_id>',add_to_cart,name ='add_to_cart'),
     path('item/delete/<item_id>',delete_from_cart,name='delete_from_cart'),
+    path('item/delete/<item_id>',delete_from_cart_list,name='delete_from_cart_list'),
 ]

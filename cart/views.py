@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from parts.models import Product
+from parts.models import Product,Product2
 from .models import *
 from users.models import *
 
@@ -18,7 +18,7 @@ def get_user_pending_order(request):
 
 @login_required()
 def add_to_cart(request, **kwargs):
-    part = Product.objects.filter(id = kwargs.get('item_id',"")).first()
+    part = Product2.objects.filter(id = kwargs.get('item_id',"")).first()
     quantity = request.GET.get('quantity','')
     order_item, status = OrderItem.objects.get_or_create(part = part)
     order_item.quantity = quantity
@@ -40,6 +40,14 @@ def delete_from_cart(request, item_id):
         item_to_delete[0].delete()
         messages.info(request, "Item has been deleted")
     return redirect(reverse('shopping_cart:order_summary'))
+
+@login_required()
+def delete_from_cart_list(request, item_id):
+    item_to_delete = OrderItem.objects.filter(pk=item_id)
+    if item_to_delete.exists():
+        item_to_delete[0].delete()
+        messages.info(request, "Item has been deleted")
+    return redirect(reverse('parts:partslist'))
 
 
 @login_required()

@@ -1,23 +1,23 @@
 from django.db import models
 from users.models import Profile
-from parts.models import Product
+from parts.models import Product2
 from django.contrib.auth.models import User
 # Create your models here.
 
 
 class OrderItem(models.Model):
-    part = models.OneToOneField(Product, on_delete= models.SET_NULL,null=True)
+    part = models.OneToOneField(Product2, on_delete= models.SET_NULL,null=True)
     in_order = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return self.part.title
+        return self.part.index
 
 class Order(models.Model):
-    ORDERED = 'ORD'
+    ORDERED    = 'ORD'
     PREPARING  = 'PRP'
-    SHIPPING = 'SHP'
-    DELIVERED = 'DLV'
+    SHIPPING   = 'SHP'
+    DELIVERED  = 'DLV'
     ORDER_STATUS_CHOISES = [
         (ORDERED,'Ordered'),
         (PREPARING,'Preparing order'),

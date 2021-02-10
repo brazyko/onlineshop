@@ -1,28 +1,41 @@
 from  django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic.detail import DetailView
-from .models import Product,Category
+from .models import Product,Category,Product2
 from django.contrib import messages
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from cart.models import Order,OrderItem
+from django.db.models import Q
 # Create your views here.
 
 def partslist(request):
-    parts = Product.objects.all()
-    order_items = OrderItem.objects.all()
-    order_parts = []
-    for item in order_items:
-        order_parts.append(item.part)
-    print(order_parts)
+    parts = Product2.objects.all()
+    my_order = Order.objects.filter(owner = request.user,order_status='ORD').first()
+    ordered_items = []
+    if my_order:
+        for item in my_order.items.all():
+            ordered_items.append(item.part)
+    page_number = request.GET.get('page',1)
+    paginator = Paginator(parts,12)
+    page_obj = paginator.get_page(page_number)
+    try:
+    	parts = paginator.page(page_number)
+    except PageNotAnInteger:
+        parts = paginator.page(1)
+    except EmptyPage:
+        parts = paginator.page(paginator.num_pages)
+
+
     context = {
         'parts':parts,
-        'order_items':order_items,
-        'order_parts':order_parts,
+        'my_order':my_order,
+        'ordered_items':ordered_items,
+        'page_obj': page_obj,
     }
     return render(request,'parts_list.html',context)
 
 class partdetail(DetailView):
     def get(self, request, *args, **kwargs):
-        object = get_object_or_404(Product, id=kwargs['id'])
+        object = get_object_or_404(Product2, id=kwargs['id'])
         context = {
             'part':object,
         }
@@ -32,16 +45,15 @@ class partdetail(DetailView):
 def partSearch(request):
     search_query = request.GET.get('partnumber','')
     if search_query:
-        parts_cross  = Product.objects.all()
-        part = parts_cross.filter(original = search_query).first()
-        if part != None:
-            parts_cross = Product.objects.filter(cross = part.cross)
+        parts = Product2.objects.filter(Q(original=search_query) | Q(index=search_query))
+        if parts:
+            parts_cross = parts.first()
+            parts_cross = Product2.objects.filter(original = parts_cross.original)
         else:
             parts_cross = None
-            print('not extsts')
             messages.error(request, 'Ми не змогли знайти деталей з таким номером')
     context = {
-        'part':part,
+        'parts':parts,
         'parts_cross':parts_cross,
     }
     return render(request,'parts_search.html',context)

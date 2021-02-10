@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<title>ZP4 - корзина</title>
  <section>
    <h1>
      Корзина
@@ -61,12 +61,12 @@
       <tr>
         <td colspan=3 >
           <a href="{% url 'parts:partslist' %}" class="btn btn-warning pull-left">
-            {% if order %}Continue Shopping{% else %}Add Items to Cart {% endif %}
+            {% if order %}Продовжити покупки{% else %}Додати в корзину {% endif %}
           </a> 
         </td>
         <td colspan=3>
           {% if order.get_cart_items %}
-            <a href="#" class="pull-right btn btn-primary">Proceed To Checkout</a>
+            <a href="#" class="pull-right btn btn-primary">Перейти до оформлення</a>
           {% endif %}
         </td>
       </tr>
@@ -78,9 +78,4 @@
 
 {% block scripts %}
   {{ block.super }}
-  <script>
-  function confirm_delete(){
-    return confirm("Do you want to remove this item from cart?");
-  }
-  </script>
 {% endblock scripts %}

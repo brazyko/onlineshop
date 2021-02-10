@@ -2,10 +2,44 @@
 
 {% block content %} 
 <title>{{ user.username }}'s profile</title>
-<div col-lg-12>
-    <div class="border mt-2">
-        {{user.username}}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mt-3 border">
+            {{user.username}}
+            <div class="table-responsive">
+                    {% for order in my_orders%}
+                <table class="table table-bordered">
+                    <thead>
+                        Замовлення № {{order.ref_code}}
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Виробник</th>
+                            <th scope="col">index</th>
+                            <th scope="col">Опис</th>
+                            <th scope="col">Оригінал</th>
+                            <th scope="col">Ціна</th>
+                            <th scope="col">Кількість</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for part in order.items.all%}
+                        <tr>
+                            <th scope="row">{{ forloop.counter}}</th>
+                            <th scope="row">{{ part.part.producer }}</th>
+                            <td><a href="{{ part.id }}">{{ part.part.index }}</a></td>
+                            <td>{{ part.part.description }}</td>
+                            <td>{{ part.part.original }}</td>
+                            <td>{{ part.part.price }}</td>
+                            <td scope="row">{{ part.quantity }}</td>
+                        </tr>
+                    {% endfor %}  
+                    </tbody>
+                </table>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
+
 
 {% endblock %}
