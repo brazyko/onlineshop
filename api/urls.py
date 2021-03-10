@@ -5,7 +5,8 @@ from .views import *
 name = 'api'
 
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r'users', UserViewSet),
+router.register('cart',CartViewSet),
 
 urlpatterns = [
     path('', include(router.urls)),
