@@ -1,6 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from parts.models import Product
 from cart.models import *
 
 def admintools(request):
@@ -56,3 +59,37 @@ def orders_shipping_administration_confirm(request,ref):
         return redirect(reverse('admintools:orders_shipping_admin'))
     else:
         return redirect(reverse('pagenotfound'))
+
+class PartsManage(ListView):
+    model = Product
+    paginate_by = 40
+    template_name = 'manage_parts.html'
+
+class CreatePart(CreateView):
+    model = Product
+    fields = ['producer','index','description','original','instock','price']
+    template_name = 'manual_create_part.html'
+    def get_success_url(self):
+        return reverse('admintools:manage-parts')
+
+class DeletePart(DeleteView):
+    model = Product
+    template_name ='product_confirm_delete.html'
+    def get_success_url(self):
+        return reverse('admintools:manage-parts')
+
+    def get_object(self):
+    	id = self.kwargs.get("id")
+    	return get_object_or_404(Product,id=id)
+
+class UpdatePart(CreateView):
+    model = Product
+    fields = ['producer','index','description','original','instock','price']
+    template_name = 'update.html'
+
+    def get_object(self):
+    	id = self.kwargs.get("id")
+    	return get_object_or_404(Product,id=id)
+    
+    def get_success_url(self):
+        return reverse('admintools:manage-parts')

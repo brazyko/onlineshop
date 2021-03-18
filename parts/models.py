@@ -10,15 +10,13 @@ from .utils import generate_unique_slug
 
 # Create your models here.
 class Product(models.Model):
-    producer   = models.CharField(max_length=60)
-    index       = models.TextField()
-    description = models.TextField(blank=True, null=True)
-    original       = models.TextField()
-    instock     = models.IntegerField(blank=False)
-    price       = models.DecimalField(decimal_places=2,max_digits=10000)
+    producer   = models.CharField(max_length=60,verbose_name="Виробник")
+    index       = models.TextField(verbose_name="Індекс")
+    description = models.TextField(blank=True, null=True,verbose_name="Опис")
+    original       = models.TextField(verbose_name="Оригінал")
+    instock     = models.IntegerField(blank=False,verbose_name="В наявності")
+    price       = models.DecimalField(decimal_places=2,max_digits=10000,verbose_name="Ціна")
     
-
-
     def __str__(self):
         return self.index
         
